@@ -1,0 +1,20 @@
+# Environment and secrets
+venv/
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# App data (keep the folders, not the contents)
+data/db/*
+!data/db/.gitkeep
+exports/*
+!exports/.gitkeep
+
+# macOS
+.DS_Store
+
+# Streamlit local secrets
+.streamlit/secrets.toml

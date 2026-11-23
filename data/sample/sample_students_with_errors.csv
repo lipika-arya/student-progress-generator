@@ -1,0 +1,9 @@
+student_id,student_name,parent_name,parent_email,subject,current_score,previous_score,attendance_percentage
+S001,Aarav Mehta,Rohan Mehta,rohan.mehta@example.com,Mathematics,82,74,96
+S001,Aarav Mehta,Rohan Mehta,rohan.mehta@example.com,Mathematics,82,74,96
+S002,Maya Chen,Lily Chen,lily.chen@example.com,Mathematics,105,88,98
+S003,Liam Johnson,,sarah.johnson@example.com,Mathematics,38,52,81
+S004,Sofia Garcia,Carlos Garcia,not-an-email,Mathematics,88,88,120
+S005,,Emma Williams,emma.williams@example.com,Mathematics,61,45,90
+S006,Zara Khan,Imran Khan,imran.khan@example.com,Mathematics,abc,77,93
+S007,Ethan Brown,Olivia Brown,olivia.brown@example.com,Mathematics,67,,88
