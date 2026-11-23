@@ -5,14 +5,27 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-load_dotenv(PROJECT_ROOT / ".env")
+load_dotenv(PROJECT_ROOT / ".env")  # local development
+
+
+def _get(name: str, default: str = "") -> str:
+    """Read a setting from the environment (.env locally), else from Streamlit Cloud secrets."""
+    value = os.getenv(name)
+    if value is not None:
+        return value
+    try:
+        import streamlit as st
+        return str(st.secrets.get(name, default))
+    except Exception:  # no secrets file locally, or not running inside Streamlit
+        return default
+
 
 PLACEHOLDER_KEYS = {"", "your-openai-api-key-here", "your-gemini-api-key-here"}
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
+OPENAI_API_KEY = _get("OPENAI_API_KEY", "")
+OPENAI_MODEL = _get("OPENAI_MODEL", "gpt-4o-mini")
+GEMINI_API_KEY = _get("GEMINI_API_KEY", "")
+GEMINI_MODEL = _get("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
 # Both providers are used through the OpenAI Python SDK. Gemini offers an
 # OpenAI-compatible endpoint, so only the key, model and base URL change.
@@ -30,7 +43,7 @@ PROVIDERS = {
     },
 }
 
-AI_PROVIDER = os.getenv("AI_PROVIDER", "openai").strip().lower()
+AI_PROVIDER = _get("AI_PROVIDER", "openai").strip().lower()
 if AI_PROVIDER not in PROVIDERS:
     raise ValueError(f"AI_PROVIDER must be one of {list(PROVIDERS)}, got '{AI_PROVIDER}'.")
 
@@ -42,9 +55,9 @@ AI_BASE_URL = _active["base_url"]
 AI_KEY_NAME = _active["key_name"]
 AI_BILLING_URL = _active["billing_url"]
 # 0 = no pacing. Free tiers limit requests per minute, so we space requests out.
-REQUESTS_PER_MINUTE = int(os.getenv("AI_REQUESTS_PER_MINUTE", _active["default_rpm"]))
+REQUESTS_PER_MINUTE = int(_get("AI_REQUESTS_PER_MINUTE", str(_active["default_rpm"])))
 
-DATABASE_PATH = PROJECT_ROOT / os.getenv("DATABASE_PATH", "data/db/notes.db")
+DATABASE_PATH = PROJECT_ROOT / _get("DATABASE_PATH", "data/db/notes.db")
 EXPORTS_DIR = PROJECT_ROOT / "exports"
 
 
