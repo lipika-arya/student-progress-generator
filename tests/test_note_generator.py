@@ -185,3 +185,10 @@ def test_gemini_bad_key_is_fatal(profiles):
     with pytest.raises(NoteGenerationError) as exc:
         generate_note(profiles["S001"], client=client, model="gemini-2.5-flash")
     assert exc.value.fatal
+
+
+def test_service_busy_is_retryable_with_clear_message(profiles):
+    client = FakeClient(error=_status_error(openai.InternalServerError, 503, "high demand"))
+    with pytest.raises(NoteGenerationError) as exc:
+        generate_note(profiles["S001"], client=client, model="gemini-3.5-flash-lite")
+    assert not exc.value.fatal and "busy" in str(exc.value)

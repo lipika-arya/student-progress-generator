@@ -248,6 +248,11 @@ def generate_note(profile: StudentProfile, client: OpenAI | None = None, model: 
         raise NoteGenerationError(f"The request to {name} timed out.") from exc
     except openai.APIConnectionError as exc:
         raise NoteGenerationError(f"Couldn't connect to {name}. Check your internet connection.") from exc
+    except openai.InternalServerError as exc:  # 500/502/503: the service is busy or having problems
+        raise NoteGenerationError(
+            f"{name} is busy right now (error {exc.status_code}). Wait a minute, then use "
+            "'Generate the missing notes' to retry just these students."
+        ) from exc
     except openai.APIStatusError as exc:
         raise NoteGenerationError(f"{name} returned an error ({exc.status_code}). Try again shortly.") from exc
 

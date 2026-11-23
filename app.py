@@ -168,9 +168,23 @@ keep_approved = st.checkbox(
     disabled=not any(n["status"] == "Approved" for n in existing.values()),
 )
 
-if st.button(f"✨ Generate notes for all {len(profiles)} students", type="primary"):
+missing = [p for sid, p in profiles.items() if sid not in existing]
+col_all, col_missing = st.columns(2)
+generate_all = col_all.button(f"✨ Generate notes for all {len(profiles)} students", type="primary", width="stretch")
+# After a partial run (e.g. the AI service was busy), fill the gaps without redoing finished notes.
+generate_missing = (
+    col_missing.button(f"🔁 Generate the {len(missing)} missing note(s)", width="stretch")
+    if existing and missing else False
+)
+
+targets = None
+if generate_all:
     targets = [p for sid, p in profiles.items()
                if not (keep_approved and existing.get(sid, {}).get("status") == "Approved")]
+elif generate_missing:
+    targets = missing
+
+if targets is not None:
     progress = st.progress(0.0, text="Starting…")
     failures, flagged = [], 0
     try:
