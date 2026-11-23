@@ -98,7 +98,7 @@ class GeneratedNote:
 def get_client() -> OpenAI:
     if not config.has_api_key():
         raise NoteGenerationError(
-            f"No {config.AI_PROVIDER_LABEL} API key configured. Add {config.AI_KEY_NAME} to your .env file.",
+            f"No {config.AI_PROVIDER_LABEL} API key configured. Add {config.AI_KEY_NAME} to .env (local) or to Secrets (Streamlit Cloud).",
             fatal=True,
         )
     # The SDK retries rate limits and temporary server errors with backoff.

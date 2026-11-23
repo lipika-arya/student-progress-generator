@@ -25,7 +25,7 @@ with st.sidebar:
     if config.has_api_key():
         st.success(f"{config.AI_PROVIDER_LABEL} API key loaded")
     else:
-        st.warning(f"No {config.AI_PROVIDER_LABEL} API key found. Add {config.AI_KEY_NAME} to your .env file.")
+        st.warning(f"No {config.AI_PROVIDER_LABEL} API key found. Add {config.AI_KEY_NAME} to .env (local) or to Secrets (Streamlit Cloud).")
 
 # ---- Feature 1: upload and validate ----
 st.header("1. Upload student data")
